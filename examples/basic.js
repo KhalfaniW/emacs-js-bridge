@@ -1,7 +1,8 @@
 const { EmacsServer } = require("../src/emacsServer");
-const path = require("path");
+const fs = require("fs");
 
-const emacsServer = new EmacsServer(path.join(__dirname, "../elisp/server.el"));
+
+const emacsServer = new EmacsServer();
 
 (async () => {
   try {

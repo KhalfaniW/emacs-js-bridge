@@ -3,18 +3,31 @@ const { exec } = require("child_process");
 const util = require("util");
 const execAsync = util.promisify(exec);
 const path = require("path");
+const fs = require("fs");
+const os = require("os");
 const logger = require("./logger");
 
 export class EmacsServer {
-  constructor(serverFilePath, port = 5999) {
-    this.serverFilePath = serverFilePath;
+  constructor(port = 5999) {
+    this.lispCode = fs.readFileSync(
+      path.join(__dirname, "../elisp/server.el"),
+      "utf8",
+    );
     this.port = port;
     this.client = new net.Socket();
+    this.tempFilePath = null;
+  }
+
+  async writeTempFile() {
+    this.tempFilePath = path.join(os.tmpdir(), `emacs-server-${Date.now()}.el`);
+    await fs.promises.writeFile(this.tempFilePath, this.lispCode, "utf8");
+    logger.debug(`Written temp file: ${this.tempFilePath}`);
   }
 
   async startServer() {
-    logger.info(`Starting Emacs server with file: ${this.serverFilePath}`);
-    execAsync(`emacs -Q -l ${this.serverFilePath}`);
+    await this.writeTempFile();
+    logger.info(`Starting Emacs server with temp file: ${this.tempFilePath}`);
+    execAsync(`emacs -Q -l ${this.tempFilePath}`);
 
     return new Promise((resolve, reject) => {
       const retryInterval = 500;
@@ -29,8 +42,10 @@ export class EmacsServer {
           return;
         }
 
-        this.client.connect(this.port, "localhost", () => {
+        this.client.connect(this.port, "localhost", async () => {
           logger.info("Connected to Emacs server");
+          await fs.promises.unlink(this.tempFilePath);
+          logger.debug(`Removed temp file: ${this.tempFilePath}`);
           clearInterval(intervalId);
           resolve();
         });
@@ -75,5 +90,3 @@ export class EmacsServer {
     });
   }
 }
-
-
