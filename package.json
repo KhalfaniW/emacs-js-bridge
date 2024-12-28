@@ -1,0 +1,22 @@
+{
+  "name": "emacs-js-bridge",
+  "version": "1.0.0",
+  "description": "A Node.js bridge to interact with Emacs server",
+  "main": "src/emacsServer.js",
+  "scripts": {
+    "test": "bun examples/basic.js",
+    "start": "bun examples/basic.js --log-level warn",
+    "start:verbose": "bun examples/basic.js --log-level verbose"
+  },
+  "keywords": [
+    "emacs",
+    "nodejs",
+    "bridge",
+    "tcp"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "winston": "^3.8.2"
+  }
+}
