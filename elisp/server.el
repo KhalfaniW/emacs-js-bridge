@@ -31,7 +31,7 @@ If PORT is not specified, use `elisp-server-port`."
                     (eval (car (read-from-string string)))
                   (error (format "Error: %s" err)))))
     (message "Sending: %s" result)
-    (process-send-string proc (format "%s\n" result))))
+    (process-send-string proc (format "%s" result))))
 
 ;; Start the server on the default port
 (start-elisp-server)

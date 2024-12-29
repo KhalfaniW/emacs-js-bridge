@@ -1,5 +1,4 @@
-const { EmacsServer } = require("../src/emacsServer");
-const fs = require("fs");
+const { EmacsServer } = require("../dist/index.js");
 
 
 const emacsServer = new EmacsServer();
@@ -7,7 +6,7 @@ const emacsServer = new EmacsServer();
 (async () => {
   try {
     await emacsServer.startServer();
-
+    console.log("CONNECTED");
     let result = await emacsServer.connectAndEvaluate("(+ 2 3)");
     console.log("Evaluation result:", result);
 

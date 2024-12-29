@@ -1,4 +1,5 @@
-const { EmacsServer } = require("../src/emacsServer");
+const { EmacsServer } = require("../dist/index.js");
+
 const path = require("path");
 
 const emacsServer = new EmacsServer();
@@ -7,14 +8,10 @@ async function e(strings) {
   return await emacsServer.connectAndEvaluate(strings);
 }
 
-const xyz = 4;
-const result1 = e(`(setq xyz ${xyz})`);
-console.log(result1); // Output: (setq xyz 4)
-
 (async () => {
   try {
     await emacsServer.startServer();
-
+    const xyz= '0.99'
     let result = await e(`(setq xyz ${xyz})`);
 
     console.log(await e("(+ 100 xyz)"));
